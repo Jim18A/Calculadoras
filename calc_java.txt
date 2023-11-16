@@ -1,0 +1,128 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Calculadora extends JFrame implements ActionListener {
+    private JTextField pantalla;
+    private JButton[] botonesNum;
+    private JButton[] botonesOp;
+    private double valor1, valor2, resultado;
+    private String operacion;
+
+    public Calculadora() {
+        super("Calculadora");
+        setLayout(new BorderLayout());
+
+        pantalla = new JTextField();
+        pantalla.setEditable(false);
+        add(pantalla, BorderLayout.NORTH);
+
+        JPanel panelNum = new JPanel(new GridLayout(4, 3));
+        botonesNum = new JButton[10];
+        for (int i = 0; i < 10; i++) {
+            botonesNum[i] = new JButton(String.valueOf(i));
+            botonesNum[i].addActionListener(this);
+            panelNum.add(botonesNum[i]);
+        }
+        add(panelNum, BorderLayout.CENTER);
+
+        JPanel panelOp = new JPanel(new GridLayout(4, 2));
+        botonesOp = new JButton[8];
+        botonesOp[0] = new JButton("+");
+        botonesOp[1] = new JButton("-");
+        botonesOp[2] = new JButton("*");
+        botonesOp[3] = new JButton("/");
+        botonesOp[4] = new JButton("sqrt");
+        botonesOp[5] = new JButton("x^2");
+        botonesOp[6] = new JButton("C");
+        botonesOp[7] = new JButton("=");
+        for (int i = 0; i < 8; i++) {
+            botonesOp[i].addActionListener(this);
+            panelOp.add(botonesOp[i]);
+        }
+        add(panelOp, BorderLayout.EAST);
+
+        pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String comando = e.getActionCommand();
+        if (comando.matches("[0-9]")) {
+            pantalla.setText(pantalla.getText() + comando);
+        } else if (comando.equals("+")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            operacion = "+";
+            pantalla.setText("");
+        } else if (comando.equals("-")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            operacion = "-";
+            pantalla.setText("");
+        } else if (comando.equals("*")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            operacion = "*";
+            pantalla.setText("");
+        } else if (comando.equals("/")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            operacion = "/";
+            pantalla.setText("");
+        } else if (comando.equals("sqrt")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            resultado = Math.sqrt(valor1);
+            pantalla.setText(String.valueOf(resultado));
+        } else if (comando.equals("x^2")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            resultado = valor1 * valor1;
+            pantalla.setText(String.valueOf(resultado));
+        } else if (comando.equals("C")) {
+            pantalla.setText("");
+        } else if (comando.equals("=")) {
+            valor2 = Double.parseDouble(pantalla.getText());
+            if (operacion.equals("+")) {
+                resultado = valor1 + valor2;
+            } else if (operacion.equals("-")) {
+                resultado = valor1 - valor2;
+            } else if (operacion.equals("*")) {
+                resultado = valor1 * valor2;
+            } else if (operacion.equals("/")) {
+                resultado = valor1 / valor2;
+            }
+            pantalla.setText(String.valueOf(resultado));
+        }
+    }
+
+    public static void main(String[] args) {
+        Calculadora calc = new Calculadora();
+    }
+}
+
+class CalculadoraCientifica extends Calculadora {
+    public CalculadoraCientifica() {
+        super();
+        botonesOp[4].setText("sin");
+        botonesOp[5].setText("cos");
+        botonesOp[6].setText("tan");
+        botonesOp[7].setText("pi");
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
+        String comando = e.getActionCommand();
+        if (comando.equals("sin")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            resultado = Math.sin(valor1);
+            pantalla.setText(String.valueOf(resultado));
+        } else if (comando.equals("cos")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            resultado = Math.cos(valor1);
+            pantalla.setText(String.valueOf(resultado));
+        } else if (comando.equals("tan")) {
+            valor1 = Double.parseDouble(pantalla.getText());
+            resultado = Math.tan(valor1);
+            pantalla.setText(String.valueOf(resultado));
+        } else if (comando.equals("pi")) {
+            pantalla.setText(String.valueOf(Math.PI));
+        }
+    }
+}

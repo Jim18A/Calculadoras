@@ -1,0 +1,145 @@
+using System;
+using System.Windows.Forms;
+
+public class Calculadora : Form {
+    private TextBox pantalla;
+    private Button[] botonesNum;
+    private Button[] botonesOp;
+    private double valor1, valor2, resultado;
+    private string operacion;
+
+    public Calculadora() {
+        Text = "Calculadora";
+        Size = new System.Drawing.Size(200, 250);
+
+        pantalla = new TextBox();
+        pantalla.ReadOnly = true;
+        pantalla.Dock = DockStyle.Top;
+        Controls.Add(pantalla);
+
+        TableLayoutPanel panelNum = new TableLayoutPanel();
+        panelNum.Dock = DockStyle.Fill;
+        panelNum.RowCount = 4;
+        panelNum.ColumnCount = 3;
+        botonesNum = new Button[10];
+        for (int i = 0; i < 10; i++) {
+            botonesNum[i] = new Button();
+            botonesNum[i].Text = i.ToString();
+            botonesNum[i].Dock = DockStyle.Fill;
+            botonesNum[i].Click += new EventHandler(BotonNum_Click);
+            panelNum.Controls.Add(botonesNum[i]);
+        }
+        Controls.Add(panelNum);
+
+        TableLayoutPanel panelOp = new TableLayoutPanel();
+        panelOp.Dock = DockStyle.Right;
+        panelOp.RowCount = 4;
+        panelOp.ColumnCount = 2;
+        botonesOp = new Button[8];
+        botonesOp[0] = new Button();
+        botonesOp[0].Text = "+";
+        botonesOp[1] = new Button();
+        botonesOp[1].Text = "-";
+        botonesOp[2] = new Button();
+        botonesOp[2].Text = "*";
+        botonesOp[3] = new Button();
+        botonesOp[3].Text = "/";
+        botonesOp[4] = new Button();
+        botonesOp[4].Text = "sqrt";
+        botonesOp[5] = new Button();
+        botonesOp[5].Text = "x^2";
+        botonesOp[6] = new Button();
+        botonesOp[6].Text = "C";
+        botonesOp[7] = new Button();
+        botonesOp[7].Text = "=";
+        for (int i = 0; i < 8; i++) {
+            botonesOp[i].Dock = DockStyle.Fill;
+            botonesOp[i].Click += new EventHandler(BotonOp_Click);
+            panelOp.Controls.Add(botonesOp[i]);
+        }
+        Controls.Add(panelOp);
+    }
+
+    private void BotonNum_Click(object sender, EventArgs e) {
+        Button boton = (Button)sender;
+        pantalla.Text += boton.Text;
+    }
+
+    private void BotonOp_Click(object sender, EventArgs e) {
+        Button boton = (Button)sender;
+        string comando = boton.Text;
+        if (comando == "+") {
+            valor1 = double.Parse(pantalla.Text);
+            operacion = "+";
+            pantalla.Text = "";
+        } else if (comando == "-") {
+            valor1 = double.Parse(pantalla.Text);
+            operacion = "-";
+            pantalla.Text = "";
+        } else if (comando == "*") {
+            valor1 = double.Parse(pantalla.Text);
+            operacion = "*";
+            pantalla.Text = "";
+        } else if (comando == "/") {
+            valor1 = double.Parse(pantalla.Text);
+            operacion = "/";
+            pantalla.Text = "";
+        } else if (comando == "sqrt") {
+            valor1 = double.Parse(pantalla.Text);
+            resultado = Math.Sqrt(valor1);
+            pantalla.Text = resultado.ToString();
+        } else if (comando == "x^2") {
+            valor1 = double.Parse(pantalla.Text);
+            resultado = valor1 * valor1;
+            pantalla.Text = resultado.ToString();
+        } else if (comando == "C") {
+            pantalla.Text = "";
+        } else if (comando == "=") {
+            valor2 = double.Parse(pantalla.Text);
+            if (operacion == "+") {
+                resultado = valor1 + valor2;
+            } else if (operacion == "-") {
+                resultado = valor1 - valor2;
+            } else if (operacion == "*") {
+                resultado = valor1 * valor2;
+            } else if (operacion == "/") {
+                resultado = valor1 / valor2;
+            }
+            pantalla.Text = resultado.ToString();
+        }
+    }
+
+    static void Main() {
+        Application.Run(new Calculadora());
+    }
+}
+
+public class CalculadoraCientifica : Calculadora {
+    public CalculadoraCientifica() {
+        botonesOp[4].Text = "sin";
+        botonesOp[5].Text = "cos";
+        botonesOp[6].Text = "tan";
+        botonesOp[7].Text = "pi";
+    }
+
+    protected override void BotonOp_Click(object sender, EventArgs e) {
+        base.BotonOp_Click(sender, e);
+        Button boton = (Button)sender;
+        string comando = boton.Text;
+        if (comando == "sin") {
+            valor1 = double.Parse(pantalla.Text);
+            resultado = Math.Sin(valor1);
+            pantalla.Text = resultado.ToString();
+        } else if (comando == "cos") {
+            valor1 = double.Parse(pantalla.Text);
+            resultado = Math.Cos(valor1);
+            pantalla.Text = resultado.ToString();
+        } else if (comando == "tan") {
+            valor1 = double.Parse(pantalla.Text);
+            resultado = Math.Tan(valor1);
+            pantalla.Text = resultado.ToString();
+        } else if (comando == "pi") {
+            pantalla.Text = Math.PI.ToString();
+        }
+    }
+}
